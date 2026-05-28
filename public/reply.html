@@ -2,135 +2,154 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Balas Confess</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balas Confess</title>
 
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Arial,sans-serif;
-    }
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
 
-    body{
-      min-height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      background:linear-gradient(135deg,#111827,#1e3a8a);
-      padding:20px;
-      color:white;
-    }
+body{
+background:linear-gradient(135deg,#020617,#0f172a);
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+color:white;
+}
 
-    .card{
-      width:100%;
-      max-width:500px;
-      background:rgba(255,255,255,0.08);
-      backdrop-filter:blur(12px);
-      padding:30px;
-      border-radius:20px;
-      box-shadow:0 10px 30px rgba(0,0,0,0.4);
-    }
+.card{
+width:100%;
+max-width:520px;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(14px);
+padding:30px;
+border-radius:24px;
+box-shadow:0 10px 30px rgba(0,0,0,.4);
+}
 
-    h1{
-      text-align:center;
-      margin-bottom:10px;
-    }
+.top-menu{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+}
 
-    p{
-      text-align:center;
-      color:#cbd5e1;
-      margin-bottom:25px;
-    }
+.top-menu a{
+flex:1;
+text-decoration:none;
+padding:12px;
+border-radius:12px;
+text-align:center;
+font-weight:bold;
+background:#1e293b;
+color:white;
+}
 
-    input, textarea{
-      width:100%;
-      padding:14px;
-      border:none;
-      border-radius:12px;
-      margin-bottom:15px;
-      background:#f8fafc;
-    }
+h1{
+text-align:center;
+font-size:34px;
+margin-bottom:10px;
+}
 
-    textarea{
-      height:130px;
-      resize:none;
-    }
+.desc{
+text-align:center;
+color:#cbd5e1;
+margin-bottom:25px;
+}
 
-    button{
-      width:100%;
-      padding:14px;
-      border:none;
-      border-radius:12px;
-      background:#22c55e;
-      color:white;
-      font-size:16px;
-      cursor:pointer;
-      font-weight:bold;
-    }
+input, textarea{
+width:100%;
+padding:14px;
+margin-bottom:15px;
+border:none;
+border-radius:14px;
+background:#f8fafc;
+font-size:15px;
+}
 
-    button:hover{
-      background:#16a34a;
-    }
+textarea{
+height:140px;
+resize:none;
+}
 
-    .success{
-      margin-top:15px;
-      text-align:center;
-      display:none;
-      color:#4ade80;
-    }
-  </style>
+button{
+width:100%;
+padding:14px;
+border:none;
+border-radius:14px;
+background:#16a34a;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+</style>
 </head>
 <body>
 
 <div class="card">
-  <h1>Balas Confess</h1>
-  <p>Masukkan ID confess untuk membalas 💬</p>
 
-  <form id="replyForm">
-    <input type="text" id="id" placeholder="ID Confess" required />
-    <input type="text" id="nama" placeholder="Nama kamu" required />
-    <textarea id="pesan" placeholder="Isi balasan..." required></textarea>
+<div class="top-menu">
+<a href="/">Kirim Confess</a>
+<a href="/reply">Balas Confess</a>
+</div>
 
-    <button type="submit">Kirim Balasan</button>
-  </form>
+<h1>Balas Confess</h1>
 
-  <div class="success" id="success">
-    Balasan berhasil dikirim!
-  </div>
+<p class="desc">
+Balas memakai ID confess 💬
+</p>
+
+<form id="replyForm">
+<input type="text" id="id" placeholder="ID confess" required>
+<input type="text" id="nama" placeholder="Nama kamu" required>
+<textarea id="pesan" placeholder="Isi balasan..." required></textarea>
+
+<button type="submit">Kirim Balasan</button>
+</form>
+
 </div>
 
 <script>
-  const form = document.getElementById('replyForm');
+document.getElementById('replyForm').addEventListener('submit', async(e)=>{
+e.preventDefault();
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+const data = {
+id: document.getElementById('id').value,
+nama: document.getElementById('nama').value,
+pesan: document.getElementById('pesan').value
+};
 
-    const data = {
-      id: document.getElementById('id').value,
-      nama: document.getElementById('nama').value,
-      pesan: document.getElementById('pesan').value
-    };
+try{
 
-    const res = await fetch('/reply-confess', {
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify(data)
-    });
+const req = await fetch('/reply-confess',{
+method:'POST',
+headers:{
+'Content-Type':'application/json'
+},
+body:JSON.stringify(data)
+});
 
-    const result = await res.json();
+const res = await req.json();
 
-    if(result.status){
-      document.getElementById('success').style.display = 'block';
-      form.reset();
-    } else {
-      alert(result.message);
-    }
-  });
+if(res.status){
+alert('Balasan berhasil dikirim!');
+document.getElementById('replyForm').reset();
+}else{
+alert(res.message || 'Gagal mengirim balasan');
+}
+
+}catch(err){
+alert('Server error');
+}
+
+});
 </script>
 
 </body>
