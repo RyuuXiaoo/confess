@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Balas Confess</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial,sans-serif;
+    }
+
+    body{
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:linear-gradient(135deg,#111827,#1e3a8a);
+      padding:20px;
+      color:white;
+    }
+
+    .card{
+      width:100%;
+      max-width:500px;
+      background:rgba(255,255,255,0.08);
+      backdrop-filter:blur(12px);
+      padding:30px;
+      border-radius:20px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    h1{
+      text-align:center;
+      margin-bottom:10px;
+    }
+
+    p{
+      text-align:center;
+      color:#cbd5e1;
+      margin-bottom:25px;
+    }
+
+    input, textarea{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:12px;
+      margin-bottom:15px;
+      background:#f8fafc;
+    }
+
+    textarea{
+      height:130px;
+      resize:none;
+    }
+
+    button{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:12px;
+      background:#22c55e;
+      color:white;
+      font-size:16px;
+      cursor:pointer;
+      font-weight:bold;
+    }
+
+    button:hover{
+      background:#16a34a;
+    }
+
+    .success{
+      margin-top:15px;
+      text-align:center;
+      display:none;
+      color:#4ade80;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h1>Balas Confess</h1>
+  <p>Masukkan ID confess untuk membalas 💬</p>
+
+  <form id="replyForm">
+    <input type="text" id="id" placeholder="ID Confess" required />
+    <input type="text" id="nama" placeholder="Nama kamu" required />
+    <textarea id="pesan" placeholder="Isi balasan..." required></textarea>
+
+    <button type="submit">Kirim Balasan</button>
+  </form>
+
+  <div class="success" id="success">
+    Balasan berhasil dikirim!
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('replyForm');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const data = {
+      id: document.getElementById('id').value,
+      nama: document.getElementById('nama').value,
+      pesan: document.getElementById('pesan').value
+    };
+
+    const res = await fetch('/reply-confess', {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify(data)
+    });
+
+    const result = await res.json();
+
+    if(result.status){
+      document.getElementById('success').style.display = 'block';
+      form.reset();
+    } else {
+      alert(result.message);
+    }
+  });
+</script>
+
+</body>
+</html>

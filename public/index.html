@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Confess Anonymous</title>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body{
+      background: linear-gradient(135deg,#0f172a,#1e293b);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+      color:white;
+    }
+
+    .card{
+      width:100%;
+      max-width:500px;
+      background:rgba(255,255,255,0.08);
+      backdrop-filter:blur(12px);
+      border-radius:20px;
+      padding:30px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    h1{
+      text-align:center;
+      margin-bottom:10px;
+      font-size:30px;
+    }
+
+    p{
+      text-align:center;
+      color:#cbd5e1;
+      margin-bottom:25px;
+    }
+
+    input, textarea{
+      width:100%;
+      padding:14px;
+      margin-bottom:15px;
+      border:none;
+      border-radius:12px;
+      background:#f1f5f9;
+      font-size:15px;
+    }
+
+    textarea{
+      resize:none;
+      height:140px;
+    }
+
+    button{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:12px;
+      background:#3b82f6;
+      color:white;
+      font-size:16px;
+      cursor:pointer;
+      transition:0.3s;
+      font-weight:bold;
+    }
+
+    button:hover{
+      background:#2563eb;
+    }
+
+    .success{
+      margin-top:15px;
+      text-align:center;
+      color:#4ade80;
+      display:none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h1>Confess Anonymous</h1>
+  <p>Kirim pesan anonim ke seseorang 💌</p>
+
+  <form id="confessForm">
+    <input type="text" id="nama" placeholder="Nama kamu" required />
+    <input type="text" id="nomor" placeholder="Nomor tujuan (628xxxx)" required />
+    <textarea id="pesan" placeholder="Isi pesan..." required></textarea>
+    <button type="submit">Kirim Confess</button>
+  </form>
+
+  <div class="success" id="success">
+    Pesan berhasil dikirim!
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('confessForm');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const data = {
+      nama: document.getElementById('nama').value,
+      nomor: document.getElementById('nomor').value,
+      pesan: document.getElementById('pesan').value
+    };
+
+    const res = await fetch('/send-confess', {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+
+    if(result.status){
+      document.getElementById('success').style.display = 'block';
+      form.reset();
+    } else {
+      alert(result.message);
+    }
+  });
+</script>
+
+</body>
+</html>
